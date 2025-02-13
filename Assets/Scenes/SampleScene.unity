@@ -646,7 +646,7 @@ GameObject:
   - component: {fileID: 712679472}
   - component: {fileID: 712679471}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -664,8 +664,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069badfc5db87ac41ae674fa650eaa56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objetivo1: {fileID: 2130211019}
-  objetivo2: {fileID: 1159737282}
+  objetivos:
+  - {fileID: 2130211019}
+  - {fileID: 51405406}
+  - {fileID: 983866600}
+  - {fileID: 699045878}
 --- !u!195 &712679472
 NavMeshAgent:
   m_ObjectHideFlags: 0
