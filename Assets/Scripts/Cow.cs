@@ -21,6 +21,7 @@ public class Cow : MonoBehaviour
 
     private NavMeshAgent agent;
     private float defaultSpeed;
+    private bool escaping = false;
 
     private enum State { Idle, Pastar, Jugar, Escapar, Ordenar, Descanso, Estallar }
     private State currentState = State.Idle;
@@ -34,6 +35,22 @@ public class Cow : MonoBehaviour
     void Update()
     {
         float delta = Time.deltaTime;
+
+        if (estres > 90)
+        {
+            currentState = State.Estallar;
+            Explode();
+            return;
+        }
+
+        if (currentState == State.Escapar)
+        {
+            if (!DetectWolf() && HasReachedDestination())
+            {
+                Debug.Log("La vaca ha llegado al establo y ahora descansa.");
+                currentState = State.Descanso;
+            }
+        }
 
         switch (currentState)
         {
@@ -155,9 +172,6 @@ public class Cow : MonoBehaviour
                 else if (estres < 21) currentState = State.Idle;
                 else if (resistencia < 30) currentState = State.Descanso;
                 break;
-            case State.Escapar:
-                if (estres > 90 || (estres > 60 && comida < 50)) currentState = State.Estallar;
-                break;
             case State.Ordenar:
                 if (lactancia < 30) currentState = State.Idle;
                 else if (comida < 40) currentState = State.Pastar;
@@ -191,6 +205,11 @@ public class Cow : MonoBehaviour
         return false;
     }
 
+    bool HasReachedDestination()
+    {
+        return !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
+    }
+
     void ClampValues()
     {
         comida = Mathf.Clamp(comida, 0, 100);
@@ -201,6 +220,7 @@ public class Cow : MonoBehaviour
 
     void Explode()
     {
+        Debug.Log("¡La vaca ha estallado por estrés extremo!");
         Destroy(gameObject);
     }
 }
