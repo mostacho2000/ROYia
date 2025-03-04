@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -17,19 +18,27 @@ public class Cow : MonoBehaviour
     public Transform fabrica;
 
     [Header("Detección de Lobos")]
-    public float wolfDetectionRadius = 10f;
+    public float wolfDetectionRadius = 20f;
+
+    [Header("Textos de Estado")]
+    public TextMeshProUGUI textoIdle;
+    public TextMeshProUGUI textoPastar;
+    public TextMeshProUGUI textoJugar;
+    public TextMeshProUGUI textoEscapar;
+    public TextMeshProUGUI textoOrdeñar;
+    public TextMeshProUGUI textoDescanso;
 
     private NavMeshAgent agent;
     private float defaultSpeed;
-    private bool escaping = false;
 
-    private enum State { Idle, Pastar, Jugar, Escapar, Ordenar, Descanso, Estallar }
+    public enum State { Idle, Pastar, Jugar, Escapar, Ordenar, Descanso, Estallar }
     private State currentState = State.Idle;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         defaultSpeed = agent.speed;
+        ActualizarTextoEstado(); // Se llama al inicio para establecer el texto correcto
     }
 
     void Update()
@@ -48,7 +57,7 @@ public class Cow : MonoBehaviour
             if (!DetectWolf() && HasReachedDestination())
             {
                 Debug.Log("La vaca ha llegado al establo y ahora descansa.");
-                currentState = State.Descanso;
+                CambiarEstado(State.Descanso);
             }
         }
 
@@ -95,7 +104,7 @@ public class Cow : MonoBehaviour
             if (DetectWolf())
             {
                 Debug.Log("¡Un lobo ha sido detectado! La vaca está escapando.");
-                currentState = State.Escapar;
+                CambiarEstado(State.Escapar);
                 SetDestination(establo.position);
             }
         }
@@ -159,30 +168,47 @@ public class Cow : MonoBehaviour
         switch (currentState)
         {
             case State.Idle:
-                if (comida < 30) currentState = State.Pastar;
-                else if (estres > 70) currentState = State.Jugar;
-                else if (lactancia > 80) currentState = State.Ordenar;
+                if (comida < 30) CambiarEstado(State.Pastar);
+                else if (estres > 70) CambiarEstado(State.Jugar);
+                else if (lactancia > 80) CambiarEstado(State.Ordenar);
                 break;
             case State.Pastar:
-                if (comida > 95) currentState = State.Idle;
-                else if (lactancia > 80) currentState = State.Ordenar;
+                if (comida > 95) CambiarEstado(State.Idle);
+                else if (lactancia > 80) CambiarEstado(State.Ordenar);
                 break;
             case State.Jugar:
-                if (comida < 40) currentState = State.Pastar;
-                else if (estres < 21) currentState = State.Idle;
-                else if (resistencia < 30) currentState = State.Descanso;
+                if (comida < 40) CambiarEstado(State.Pastar);
+                else if (estres < 21) CambiarEstado(State.Idle);
+                else if (resistencia < 30) CambiarEstado(State.Descanso);
                 break;
             case State.Ordenar:
-                if (lactancia < 30) currentState = State.Idle;
-                else if (comida < 40) currentState = State.Pastar;
+                if (lactancia < 30) CambiarEstado(State.Idle);
+                else if (comida < 40) CambiarEstado(State.Pastar);
                 break;
             case State.Descanso:
-                if (resistencia > 85) currentState = State.Idle;
-                else if (comida < 30) currentState = State.Pastar;
-                else if (lactancia > 80) currentState = State.Ordenar;
-                else if (estres > 60) currentState = State.Jugar;
+                if (resistencia > 85) CambiarEstado(State.Idle);
+                else if (comida < 30) CambiarEstado(State.Pastar);
+                else if (lactancia > 80) CambiarEstado(State.Ordenar);
+                else if (estres > 60) CambiarEstado(State.Jugar);
                 break;
         }
+    }
+
+    void CambiarEstado(State nuevoEstado)
+    {
+        currentState = nuevoEstado;
+        Debug.Log("Nuevo estado de la vaca: " + currentState);
+        ActualizarTextoEstado();
+    }
+
+    void ActualizarTextoEstado()
+    {
+        textoIdle.gameObject.SetActive(currentState == State.Idle);
+        textoPastar.gameObject.SetActive(currentState == State.Pastar);
+        textoJugar.gameObject.SetActive(currentState == State.Jugar);
+        textoEscapar.gameObject.SetActive(currentState == State.Escapar);
+        textoOrdeñar.gameObject.SetActive(currentState == State.Ordenar);
+        textoDescanso.gameObject.SetActive(currentState == State.Descanso);
     }
 
     void SetDestination(Vector3 destination)

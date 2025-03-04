@@ -19,6 +19,7 @@ public class wolf : MonoBehaviour
     void Start()
     {
         agente = GetComponent<NavMeshAgent>();
+        comida = 100f; // Asegurar que inicia con 100 de comida
         CambiarEstado(EstadoLobo.Idle);
     }
 
@@ -30,23 +31,16 @@ public class wolf : MonoBehaviour
             return;
         }
 
-        DetectarVacas();
         EjecutarEstado();
     }
 
     void DetectarVacas()
     {
         Collider[] vacas = Physics.OverlapSphere(transform.position, radioDeteccion);
-
-        Debug.Log("Objetos detectados: " + vacas.Length);
-
         foreach (var vaca in vacas)
         {
-            Debug.Log("Objeto encontrado: " + vaca.gameObject.name);
-
             if (vaca.CompareTag("Cow"))
             {
-                Debug.Log("¡Vaca detectada! Persiguiendo...");
                 objetivo = vaca.transform;
                 break;
             }
@@ -84,7 +78,15 @@ public class wolf : MonoBehaviour
         Debug.Log("Estoy en estado Idle");
         resistencia = Mathf.Min(resistencia + 1 * Time.deltaTime, 100);
         comida = Mathf.Max(comida - 2 * Time.deltaTime, 0);
-        if (comida < 30) CambiarEstado(EstadoLobo.Cazando);
+
+        if (comida < 30)
+        {
+            DetectarVacas();
+            if (objetivo != null)
+            {
+                CambiarEstado(EstadoLobo.Cazando);
+            }
+        }
     }
 
     void Cazando()
@@ -94,7 +96,7 @@ public class wolf : MonoBehaviour
         {
             agente.SetDestination(objetivo.position);
             resistencia = Mathf.Max(resistencia - 2 * Time.deltaTime, 0);
-            comida = Mathf.Max(comida + 2 * Time.deltaTime, 100);
+            comida = Mathf.Min(comida - 1 * Time.deltaTime, 100);
 
             if (Vector3.Distance(transform.position, objetivo.position) < radioDeteccion2)
             {
@@ -111,9 +113,13 @@ public class wolf : MonoBehaviour
     void Mordiendo()
     {
         Debug.Log("Estado Degustando");
-        comida = Mathf.Max(comida - 5 * Time.deltaTime, 0);
-        resistencia = Mathf.Max(resistencia - 2 * Time.deltaTime, 0);
-        if (comida > 90) CambiarEstado(EstadoLobo.Idle);
+        comida = Mathf.Min(comida + 5 * Time.deltaTime, 100);
+        resistencia = Mathf.Max(resistencia - 1 * Time.deltaTime, 0);
+
+        if (comida > 90)
+        {
+            CambiarEstado(EstadoLobo.Idle);
+        }
     }
 
     void Muerte()
