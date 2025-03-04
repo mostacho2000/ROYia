@@ -28,7 +28,7 @@ public class wolf : MonoBehaviour
         if (comida < 5)
         {
             CambiarEstado(EstadoLobo.Muerte);
-            return;
+           
         }
 
         EjecutarEstado();

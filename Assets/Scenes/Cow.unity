@@ -896,13 +896,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.19932428, y: -0, z: -0, w: 0.9799336}
-  m_LocalPosition: {x: 0, y: 99.3, z: -95.4}
+  m_LocalRotation: {x: 0.1413382, y: -0, z: -0, w: 0.9899614}
+  m_LocalPosition: {x: 0, y: 92.4, z: -175.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 22.995, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 16.251, y: 0, z: 0}
 --- !u!1 &979496308
 GameObject:
   m_ObjectHideFlags: 0
@@ -1177,7 +1177,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 1
+  m_BaseOffset: 2
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!136 &1010314779
@@ -1282,7 +1282,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radioDeteccion: 50000
   radioDeteccion2: 25
-  comida: 50
+  comida: 20
   resistencia: 100
 --- !u!1 &1180350359
 GameObject:
@@ -2066,7 +2066,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -91.2, y: 0.45, z: -123.1}
-  m_LocalScale: {x: 115, y: 1, z: 90}
+  m_LocalScale: {x: 115, y: 1.1, z: 90}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
