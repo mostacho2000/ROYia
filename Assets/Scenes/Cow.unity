@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 108517286}
   - component: {fileID: 108517285}
   - component: {fileID: 108517290}
+  - component: {fileID: 108517291}
   m_Layer: 0
   m_Name: vaca
   m_TagString: Cow
@@ -180,7 +181,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -278,8 +279,35 @@ MonoBehaviour:
   textoPastar: {fileID: 803042871}
   textoJugar: {fileID: 1188530219}
   textoEscapar: {fileID: 1217546529}
-  "textoOrde\xF1ar": {fileID: 1436707181}
+  textoOrdear: {fileID: 0}
   textoDescanso: {fileID: 228962114}
+--- !u!54 &108517291
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108517283}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &228962113
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,8 +747,8 @@ GameObject:
   - component: {fileID: 962957368}
   - component: {fileID: 962957367}
   m_Layer: 0
-  m_Name: pastar
-  m_TagString: Untagged
+  m_Name: 'Pastar '
+  m_TagString: Pastar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -744,8 +772,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.9999999, y: 6.259634, z: 0.9999999}
+  m_Center: {x: 0, y: 2.629817, z: 0}
 --- !u!23 &962957368
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -805,7 +833,7 @@ Transform:
   m_GameObject: {fileID: 962957366}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 113.9, y: 0.45, z: 112}
+  m_LocalPosition: {x: 113.9, y: 0.45, z: 111.1}
   m_LocalScale: {x: 130, y: 1, z: 130}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1634,7 +1662,7 @@ GameObject:
   - component: {fileID: 1419951200}
   m_Layer: 0
   m_Name: "orde\xF1a"
-  m_TagString: Untagged
+  m_TagString: "Orde\xF1a"
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1658,8 +1686,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 8.583442, z: 1}
+  m_Center: {x: 0, y: 3.7917209, z: 0}
 --- !u!23 &1419951201
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1980,7 +2008,7 @@ GameObject:
   - component: {fileID: 1661983166}
   m_Layer: 0
   m_Name: establo
-  m_TagString: Untagged
+  m_TagString: establo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

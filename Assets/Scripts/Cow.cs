@@ -6,18 +6,18 @@ using UnityEngine.AI;
 
 public class Cow : MonoBehaviour
 {
-    [Header("Par·metros")]
+    [Header("Par√°metros")]
     public float comida = 50f;
     public float lactancia = 50f;
     public float estres = 50f;
     public float resistencia = 50f;
 
-    [Header("Puntos de InterÈs")]
+    [Header("Puntos de Inter√©s")]
     public Transform pastizal;
     public Transform establo;
     public Transform fabrica;
 
-    [Header("DetecciÛn de Lobos")]
+    [Header("Detecci√≥n de Lobos")]
     public float wolfDetectionRadius = 20f;
 
     [Header("Textos de Estado")]
@@ -25,11 +25,13 @@ public class Cow : MonoBehaviour
     public TextMeshProUGUI textoPastar;
     public TextMeshProUGUI textoJugar;
     public TextMeshProUGUI textoEscapar;
-    public TextMeshProUGUI textoOrdeÒar;
+    public TextMeshProUGUI textoOrdear;
     public TextMeshProUGUI textoDescanso;
 
     private NavMeshAgent agent;
     private float defaultSpeed;
+    private bool dentroDePastizal = false;
+    private bool dentroDeOrde√±a = false;
 
     public enum State { Idle, Pastar, Jugar, Escapar, Ordenar, Descanso, Estallar }
     private State currentState = State.Idle;
@@ -38,7 +40,7 @@ public class Cow : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         defaultSpeed = agent.speed;
-        ActualizarTextoEstado(); // Se llama al inicio para establecer el texto correcto
+        ActualizarTextoEstado();
     }
 
     void Update()
@@ -47,7 +49,7 @@ public class Cow : MonoBehaviour
 
         if (estres > 90)
         {
-            currentState = State.Estallar;
+            CambiarEstado(State.Estallar);
             Explode();
             return;
         }
@@ -56,7 +58,6 @@ public class Cow : MonoBehaviour
         {
             if (!DetectWolf() && HasReachedDestination())
             {
-                Debug.Log("La vaca ha llegado al establo y ahora descansa.");
                 CambiarEstado(State.Descanso);
             }
         }
@@ -64,31 +65,25 @@ public class Cow : MonoBehaviour
         switch (currentState)
         {
             case State.Idle:
-                Debug.Log("La vaca est· en estado idle (reposo). ");
                 UpdateIdle(delta);
                 break;
             case State.Pastar:
-                Debug.Log("La vaca est· pastando.");
                 SetDestination(pastizal.position);
                 UpdatePastar(delta);
                 break;
             case State.Jugar:
-                Debug.Log("La vaca est· jugando.");
                 SetDestination(pastizal.position);
                 UpdateJugar(delta);
                 break;
             case State.Escapar:
-                Debug.Log("°La vaca est· escapando!");
                 SetDestination(establo.position);
                 UpdateEscapar(delta);
                 break;
             case State.Ordenar:
-                Debug.Log("La vaca est· siendo ordeÒada.");
                 SetDestination(fabrica.position);
                 UpdateOrdenar(delta);
                 break;
             case State.Descanso:
-                Debug.Log("La vaca est· descansando.");
                 SetDestination(establo.position);
                 UpdateDescanso(delta);
                 break;
@@ -103,7 +98,6 @@ public class Cow : MonoBehaviour
         {
             if (DetectWolf())
             {
-                Debug.Log("°Un lobo ha sido detectado! La vaca est· escapando.");
                 CambiarEstado(State.Escapar);
                 SetDestination(establo.position);
             }
@@ -121,9 +115,17 @@ public class Cow : MonoBehaviour
 
     void UpdatePastar(float delta)
     {
-        comida += 7f * delta;
         estres -= 0.3f * delta;
         UpdateLactancia(delta);
+
+        if (dentroDePastizal)
+        {
+            comida += 7f * delta;
+        }
+        else
+        {
+            comida -= 2f * delta;
+        }
     }
 
     void UpdateJugar(float delta)
@@ -143,8 +145,12 @@ public class Cow : MonoBehaviour
 
     void UpdateOrdenar(float delta)
     {
-        lactancia -= 1f * delta;
         comida -= 2f * delta;
+
+        if (dentroDeOrde√±a) // Lactancia solo baja dentro del objeto "Orde√±a"
+        {
+            lactancia -= 1f * delta;
+        }
     }
 
     void UpdateDescanso(float delta)
@@ -197,7 +203,6 @@ public class Cow : MonoBehaviour
     void CambiarEstado(State nuevoEstado)
     {
         currentState = nuevoEstado;
-        Debug.Log("Nuevo estado de la vaca: " + currentState);
         ActualizarTextoEstado();
     }
 
@@ -207,7 +212,7 @@ public class Cow : MonoBehaviour
         textoPastar.gameObject.SetActive(currentState == State.Pastar);
         textoJugar.gameObject.SetActive(currentState == State.Jugar);
         textoEscapar.gameObject.SetActive(currentState == State.Escapar);
-        textoOrdeÒar.gameObject.SetActive(currentState == State.Ordenar);
+        textoOrdear.gameObject.SetActive(currentState == State.Ordenar);
         textoDescanso.gameObject.SetActive(currentState == State.Descanso);
     }
 
@@ -246,8 +251,30 @@ public class Cow : MonoBehaviour
 
     void Explode()
     {
-        Debug.Log("°La vaca ha estallado por estrÈs extremo!");
         Destroy(gameObject);
     }
-}
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Pastar"))
+        {
+            dentroDePastizal = true;
+        }
+        else if (other.CompareTag("Orde√±a"))
+        {
+            dentroDeOrde√±a = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Pastar"))
+        {
+            dentroDePastizal = false;
+        }
+        else if (other.CompareTag("Orde√±a"))
+        {
+            dentroDeOrde√±a = false;
+        }
+    }
+}
