@@ -279,7 +279,7 @@ MonoBehaviour:
   textoPastar: {fileID: 803042871}
   textoJugar: {fileID: 1188530219}
   textoEscapar: {fileID: 1217546529}
-  textoOrdear: {fileID: 1436707181}
+  textoOrdear: {fileID: 0}
   textoDescanso: {fileID: 228962114}
 --- !u!54 &108517291
 Rigidbody:
@@ -1290,7 +1290,7 @@ Transform:
   m_GameObject: {fileID: 1010314777}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 84, y: 8.9, z: -95.9}
+  m_LocalPosition: {x: 84, y: 7.2, z: -95.9}
   m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -32,8 +32,6 @@ public class Cow : MonoBehaviour
     private float defaultSpeed;
     private bool dentroDePastizal = false;
     private bool dentroDeOrdeña = false;
-    private float lastStateChangeTime; // Tiempo desde el último cambio de estado
-    private float stateChangeDelay = 2f; // Retraso mínimo entre cambios de estado
 
     public enum State { Idle, Pastar, Jugar, Escapar, Ordenar, Descanso, Estallar }
     private State currentState = State.Idle;
@@ -43,19 +41,11 @@ public class Cow : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         defaultSpeed = agent.speed;
         ActualizarTextoEstado();
-        lastStateChangeTime = Time.time; // Inicializar el tiempo del último cambio de estado
     }
 
     void Update()
     {
         float delta = Time.deltaTime;
-
-        if (comida < 5)
-        {
-            CambiarEstado(State.Estallar);
-            Explode();
-            return;
-        }
 
         if (estres > 90)
         {
@@ -157,8 +147,7 @@ public class Cow : MonoBehaviour
     {
         comida -= 2f * delta;
 
-        // Lactancia solo baja dentro del objeto "Ordeña"
-        if (dentroDeOrdeña)
+        if (dentroDeOrdeña) // Lactancia solo baja dentro del objeto "Ordeña"
         {
             lactancia -= 1f * delta;
         }
@@ -172,77 +161,16 @@ public class Cow : MonoBehaviour
         UpdateLactancia(delta);
     }
 
-    // Funciones de membresía para la lactancia
-    float MembershipLow(float value)
-    {
-        if (value <= 40) return 1f;
-        if (value >= 41) return 0f;
-        return 1f - (value - 0) / (40 - 0);
-    }
-
-    float MembershipMedium(float value)
-    {
-        if (value <= 40 || value >= 85) return 0f;
-        if (value <= 60) return (value - 40) / (60 - 40);
-        return (85 - value) / (85 - 60);
-    }
-
-    float MembershipHigh(float value)
-    {
-        if (value <= 85) return 0f;
-        if (value >= 100) return 1f;
-        return (value - 85) / (100 - 85);
-    }
-
-    // Actualizar lactancia usando lógica difusa
     void UpdateLactancia(float delta)
     {
-        // Grados de pertenencia para la comida y el estrés
-        float comidaBaja = MembershipLow(comida);
-        float comidaMedia = MembershipMedium(comida);
-        float comidaAlta = MembershipHigh(comida);
-
-        float estresBajo = MembershipLow(estres);
-        float estresMedio = MembershipMedium(estres);
-        float estresAlto = MembershipHigh(estres);
-
-        // Aplicar reglas difusas para determinar el incremento/decremento de lactancia
-        float incrementoLactancia = Mathf.Max(
-            Mathf.Min(comidaAlta, estresBajo), // Si comida es alta y estrés es bajo, incrementar lactancia
-            Mathf.Min(comidaMedia, estresMedio) // Si comida es media y estrés es moderado, mantener lactancia
-        );
-
-        float decrementoLactancia = Mathf.Min(comidaBaja, estresAlto); // Si comida es baja y estrés es alto, decrementar lactancia
-
-        // Calcular el cambio neto de lactancia
-        float cambioLactancia = (incrementoLactancia - decrementoLactancia) * delta;
-
-        // Aplicar el cambio a la lactancia
-        lactancia += cambioLactancia * 10; // Escalar el cambio para que sea significativo
-
-        // Mostrar el estado de la lactancia en la consola
-        if (lactancia <= 40)
-        {
-            Debug.Log("Lactancia: Baja");
-        }
-        else if (lactancia > 40 && lactancia <= 85)
-        {
-            Debug.Log("Lactancia: Media");
-        }
-        else if (lactancia > 85)
-        {
-            Debug.Log("Lactancia: Alta");
-        }
+        if (comida > 77)
+            lactancia += 3f * delta;
+        else if (comida > 40 && comida <= 77)
+            lactancia += 1f * delta;
     }
 
     void EvaluateTransitions()
     {
-        // Evitar cambios de estado demasiado rápidos
-        if (Time.time - lastStateChangeTime < stateChangeDelay)
-        {
-            return;
-        }
-
         switch (currentState)
         {
             case State.Idle:
@@ -252,7 +180,7 @@ public class Cow : MonoBehaviour
                 break;
             case State.Pastar:
                 if (comida > 95) CambiarEstado(State.Idle);
-                else if (lactancia > 80 && comida > 50) CambiarEstado(State.Ordenar); // Añadir condición adicional
+                else if (lactancia > 80) CambiarEstado(State.Ordenar);
                 break;
             case State.Jugar:
                 if (comida < 40) CambiarEstado(State.Pastar);
@@ -276,7 +204,6 @@ public class Cow : MonoBehaviour
     {
         currentState = nuevoEstado;
         ActualizarTextoEstado();
-        lastStateChangeTime = Time.time; // Registrar el tiempo del último cambio de estado
     }
 
     void ActualizarTextoEstado()
@@ -324,7 +251,6 @@ public class Cow : MonoBehaviour
 
     void Explode()
     {
-        Debug.Log("¡La vaca ha estallado!");
         Destroy(gameObject);
     }
 
