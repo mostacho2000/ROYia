@@ -10,6 +10,7 @@ TagManager:
   - establo
   - Pastar
   - "Orde\xF1a"
+  - Agent
   layers:
   - Default
   - TransparentFX
